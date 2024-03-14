@@ -2,7 +2,7 @@ import tensorflow as tf
 
 @tf.function
 def val_step(inputs, labels, model, loss_fn):
-    anchor_images, contrastive_images, labels = inputs
+    anchor_images, contrastive_images = inputs
 
     # Compute embeddings for anchor, positive, and negative images
     anchor_embeddings = model(anchor_images, training=False)

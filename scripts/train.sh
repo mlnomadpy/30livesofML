@@ -8,7 +8,7 @@
 
 # Default parameters
 learning_rate=0.001
-batch_size=32
+batch_size=128
 epochs=100
 img_height=224
 img_width=224
@@ -30,9 +30,9 @@ embedding_dim=128
 conda activate tf
 export XLA_FLAGS=--xla_gpu_cuda_data_dir=/usr/lib/cuda
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/:$CUDNN_PATH/lib
-
+py_path='/home/bouhsi95/contrastive/pair_contrastive/src/train.py'
 # Running the training script with parameters
-nohup python /home/bouhsi95/contrastive/src/train.py \
+nohup python "$py_path" \
   --learning_rate $learning_rate \
   --batch_size $batch_size \
   --epochs $epochs \

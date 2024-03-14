@@ -73,6 +73,7 @@ class MultiModalDataGenerator(Sequence):
             anchor_images.append(anchor_img)
 
             is_positive = random.choice([True, False], weights=probabilities, k=1)[0]
+            # if True load a positive image
             if is_positive:
 
                 # Selecting positive sample from the same class
@@ -84,7 +85,9 @@ class MultiModalDataGenerator(Sequence):
                 positive_img = tf.image.decode_png(positive_img, channels=3)
                 positive_img = tf.image.resize(positive_img, self.target_size)
                 contrastive_images.append(positive_img)
-                labels.append(is_positive)
+                # anchor and positive are from the same class
+                labels.append(1.0)
+            # if false load a negative image
             else:
                 # Selecting negative sample from a different class
                 negative_df = self.df[self.df['class'] != anchor_row['class']]
@@ -94,10 +97,12 @@ class MultiModalDataGenerator(Sequence):
                 negative_img = tf.image.decode_png(negative_img, channels=3)
                 negative_img = tf.image.resize(negative_img, self.target_size)
                 contrastive_images.append(negative_img)
-                labels.append(is_positive)
+                # anchor and negative are from different classes
+                labels.append(0.0)
 
         anchor_images = tf.stack(anchor_images) / 255.0
         contrastive_images = tf.stack(contrastive_images) / 255.0
+        labels = tf.cast(labels, dtype=tf.float32)  # Convert labels to float32 if not already
 
         return [anchor_images, contrastive_images], labels
 
